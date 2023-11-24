@@ -8,6 +8,8 @@ int main(){
     //---------관리 시스템----------
 
     // file 관리자 불러옴
+    FileManager file_manager;
+    init_file_manager(&file_manager);
 
     // rule 관리자 불러옴 
 
