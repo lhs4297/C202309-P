@@ -1,56 +1,57 @@
 #include <stdio.h>
-#include <dirent.h>   // DIR, struct dirent, opendir, readdir
-#include <sys/stat.h>   // struct stat, stat, S_ISREG
+#include <Windows.h>
+#include <sys/stat.h>
 #include "file_manager.h"
-#include <string.h>
-#include <stdlib.h>
-
 
 void init_file_manager(FileManager* file_manager) {
     file_manager->count = 0;
 }
-
 
 // 파일 목록 수집 및 정보 분석
 void collect_file_info(FileManager* file_manager) {
     char target_dir[MAX_PATH_LENGTH];
     printf("대상 디렉토리를 입력하세요: ");
     fgets(target_dir, sizeof(target_dir), stdin);   // 대상 디렉토리 입력 받음
-    target_dir[strcspn(target_dir, "")] = '\0';   // 개행 문자 제거
+    target_dir[strcspn(target_dir, "\n")] = '\0';   // 개행 문자 제거
 
-    DIR* dir;
-    struct dirent* entry;
-    struct stat file_stat;
+    WIN32_FIND_DATAA file_data;
+    HANDLE dir_handle;
 
-    dir = opendir(target_dir);   // 대상 디렉토리 열기
-    if (dir == NULL) {
+    char search_pattern[MAX_PATH_LENGTH];
+    snprintf(search_pattern, sizeof(search_pattern), "%s\\*", target_dir);
+
+    dir_handle = FindFirstFileA(search_pattern, &file_data);
+    if (dir_handle == INVALID_HANDLE_VALUE) {
         fprintf(stderr, "디렉토리를 열 수 없습니다.");   // 예외처리
         exit(1);
     }
 
-    // 반복문 : 파일들에 접근해서 파일인 경우 파일 경로 가져옴
-    while ((entry = readdir(dir)) != NULL) {
-        if (entry->d_type == DT_REG) {
+    do {
+        if (!(file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
             char file_path[MAX_PATH_LENGTH];
-            snprintf(file_path, sizeof(file_path), "%s/%s", target_dir, entry->d_name);
+            snprintf(file_path, sizeof(file_path), "%s\\%s", target_dir, file_data.cFileName);
 
+            struct stat file_stat;
             if (stat(file_path, &file_stat) == 0) {
-                FILE* file = fopen(file_path, "r");
-                if (file != NULL) {
+                FILE* file;
+                if (fopen_s(&file, file_path, "r") == 0) {
                     FileInfo file_info;
-                    strcpy(file_info.path, file_path);
-                    strcpy(file_info.extension, strrchr(entry->d_name, '.') + 1);
+                    strcpy_s(file_info.path, sizeof(file_info.path), file_path);
+                    strcpy_s(file_info.extension, sizeof(file_info.extension), strrchr(file_data.cFileName, '.') + 1);
                     file_info.created = file_stat.st_ctime;
                     file_info.size = file_stat.st_size;
+                    // 파일 정보 분석 및 처리
+                    fclose(file);
                 }
             }
         }
-    }
+    } while (FindNextFileA(dir_handle, &file_data));
+
+    FindClose(dir_handle);
 
     // 파일 경로 안에서 파일 정보 분석 ( 확장자, 생성일 등 )
-    // 파일 내용읽기
+    // 파일 내용 읽기
+    // 파일 제목 읽어오기
 
-    // 파일 제목 읽어옴
-
-    //끝
+    // 끝
 }
