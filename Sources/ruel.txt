@@ -1,0 +1,2 @@
+png_rule extension==png
+old_file_rule created<2021
