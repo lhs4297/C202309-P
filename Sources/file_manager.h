@@ -2,7 +2,7 @@
 #define FILE_MANAGER_H
 
 #define MAX_FILES 100   // 파일 최대 개수
-#define MAX_PATH_LENGTH 64   // 파일 경로의 최대 길이
+#define MAX_PATH_LENGTH 1024   // 파일 경로의 최대 길이
 #define MAX_CONTENT_LENGTH 1024   // 파일 내용 최대 길이
 
 typedef struct {   // 파일 내용 저장하기 위해 필요한 곳

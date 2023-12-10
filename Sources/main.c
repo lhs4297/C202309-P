@@ -7,6 +7,8 @@ int main(){
 
     //---------관리 시스템----------
 
+    printf("파일 관리 시스템을 시작합니다.");
+
     // file 관리자 불러옴
     FileManager file_manager;
     init_file_manager(&file_manager);
@@ -33,6 +35,8 @@ int main(){
     // 파일 분류 및 이동
 
     // 히스토리 저장
+    
+    printf("Test 컴파일이 완료되었습니다.");
 
     return 0;
 }
