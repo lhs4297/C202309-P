@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <sys/stat.h>
 #include "file_manager.h"
+#include "rule_manager.h"
 
 void init_file_manager(FileManager* file_manager) {
     file_manager->count = 0;
@@ -52,6 +53,18 @@ void collect_file_info(FileManager* file_manager) {
     FindClose(dir_handle);
 }
 
+void classify_and_move_files(FileManager* file_manager, RuleManager* rule_manager) {
+    // 각 파일에 대하여
+    for (int i = 0; i < file_manager->count; i++) {
+        FileInfo file_info = file_manager->files[i];
+
+        // RuleManager의 규칙들을 확인하여 파일을 분류
+        for (int j = 0; j < rule_manager->count; j++) {
+            Rule rule = rule_manager->rules[j];
+
+        }
+    }
+}
 
 /*
 void collect_file_info(FileManager* file_manager) {
