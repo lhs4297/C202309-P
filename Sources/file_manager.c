@@ -62,7 +62,14 @@ void classify_and_move_files(FileManager* file_manager, RuleManager* rule_manage
         for (int j = 0; j < rule_manager->count; j++) {
             Rule rule = rule_manager->rules[j];
 
+            // 해당하는 규칙을 찾으면,
+            if (strcmp(file_info.extension, rule.condition) == 0) {
+                // 새로운 경로 생성
+                char new_path[MAX_PATH_LENGTH];
+                snprintf(new_path, sizeof(new_path), "%s\\%s", rule.rule_name, file_info.title);
+
         }
+
     }
 }
 
