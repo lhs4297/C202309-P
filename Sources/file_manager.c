@@ -68,6 +68,16 @@ void classify_and_move_files(FileManager* file_manager, RuleManager* rule_manage
                 char new_path[MAX_PATH_LENGTH];
                 snprintf(new_path, sizeof(new_path), "%s\\%s", rule.rule_name, file_info.title);
 
+                // 파일 이동
+                if (MoveFile(file_info.path, new_path)) {
+                    printf("파일 [%s]을(를) [%s]로 이동했습니다.", file_info.path, new_path);
+                }
+                else {
+                    fprintf(stderr, "파일 [%s]을(를) 이동하지 못했습니다.", file_info.path);
+                }
+
+                break;  // 해당하는 규칙을 찾았으므로 더 이상 다른 규칙을 확인할 필요 없음
+            }
         }
 
     }
