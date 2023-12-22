@@ -23,5 +23,6 @@ typedef struct {   // FileInfo 구조체 배열과 파일 개수를 저장하기
 // 함수들 초기화, 파일 정보 수집
 void init_file_manager(FileManager* file_manager);
 void collect_file_info(FileManager* file_manager);
+void classify_and_move_files(FileManager* file_manager, RuleManager* rule_manager);
 
 #endif
