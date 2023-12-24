@@ -44,6 +44,7 @@ void collect_file_info(FileManager* file_manager) {
                     file_info.created = file_stat.st_ctime;
                     file_info.size = file_stat.st_size;
                     // 파일 정보 분석 및 처리
+                    file_manager->files[file_manager->count++] = file_info;
                     fclose(file);
                 }
                 else {
@@ -72,6 +73,10 @@ void classify_and_move_files(FileManager* file_manager, RuleManager* rule_manage
                 char new_path[MAX_PATH_LENGTH];
                 snprintf(new_path, sizeof(new_path), "%s\\%s", rule.rule_name, file_info.title);
 
+                // 경로 존재 확인 및 생성
+                if (!PathFileExists(rule.rule_name))
+                    CreateDirectory(rule.rule_name, NULL);
+
                 // 파일 이동
                 if (MoveFile(file_info.path, new_path)) {
                     printf("파일 [%s]을(를) [%s]로 이동했습니다.", file_info.path, new_path);
@@ -83,7 +88,5 @@ void classify_and_move_files(FileManager* file_manager, RuleManager* rule_manage
                 break;  // 해당하는 규칙을 찾았으므로 더 이상 다른 규칙을 확인할 필요 없음
             }
         }
-
     }
 }
-
